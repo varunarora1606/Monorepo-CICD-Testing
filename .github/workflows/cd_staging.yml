@@ -12,6 +12,7 @@ jobs:
       - name: SSH into server
         run: |
           echo "${{secrets.id_ed25519_aws}}" &> ~/ssh_key
+          echo "${{secrets.known_hosts}}" &> ~/known_hosts
           ssh -i ~/ssh_key ubuntu@13.233.140.29
           cd Monorepo-CICD-Testing/ && git pull
           pnpm i
