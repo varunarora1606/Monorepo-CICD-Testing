@@ -1,0 +1,21 @@
+name: Deploy to staging
+on:
+  push:
+    branches: 
+      - "main"
+
+jobs:
+  redeploy_everything:
+    runs-on: ubuntu-latest
+    name: Redeploy everything to the staging cluster 
+    steps:
+      - name: SSH into server
+        run: |
+          echo ${{secrets.id_ed25519_aws}} &> ~/ssh_key
+          ssh -i ~/ssh_key ubuntu@13.233.140.29
+          cd Monorepo-CICD-Testing/ && git pull
+          pnpm i
+          pnpm build
+          pm2 restart web
+          pm2 restart ws
+          pm2 restart http
