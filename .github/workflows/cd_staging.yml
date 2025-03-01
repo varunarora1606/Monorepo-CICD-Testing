@@ -13,15 +13,13 @@ jobs:
         run: |
           echo "${{secrets.id_ed25519_aws}}" > ~/ssh_key
           chmod 700 ~/ssh_key
-          # mkdir -p ~/.ssh
-          # echo "${{secrets.known_hosts}}" > ~/.ssh/known_hosts
 
       - name: SSH into server and redeploy
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@13.233.140.29 << 'EOF'
           cd Monorepo-CICD-Testing
-          git pull origin main
           export PATH=/home/ubuntu/.nvm/versions/node/v22.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+          git pull origin main
           pnpm install --frozen-lockfile
           pnpm build
           pm2 restart web
