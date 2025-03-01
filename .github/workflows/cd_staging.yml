@@ -15,10 +15,13 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{secrets.known_hosts}}" > ~/.ssh/known_hosts
           chmod 700 ~/ssh_key
-          ssh -i ~/ssh_key ubuntu@13.233.140.29 << 'EOF'
-          cd Monorepo-CICD-Testing/
+          
+      - name: SSH into server and redeploy
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@13.233.140.29 << 'EOF'
+          cd Monorepo-CICD-Testing
           git pull
-          pnpm i
+          pnpm install --frozen-lockfile
           pnpm build
           pm2 restart web
           pm2 restart ws
